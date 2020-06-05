@@ -1,0 +1,14 @@
+{
+    "name": "Live Reload from VSCode",
+    "version": "1.0",
+    "description": "Receives file save events from VSCode to reload current page",
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "permissions": [
+        "nativeMessaging",
+        "webNavigation"
+    ],
+    "manifest_version": 2
+}

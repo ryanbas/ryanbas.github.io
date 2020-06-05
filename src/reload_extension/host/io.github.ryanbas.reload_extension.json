@@ -1,0 +1,9 @@
+{
+  "name": "io.github.ryanbas.reload_extension",
+  "description": "Communicate file system changes to reload_extension",
+  "path": "start.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://jjnakcecbejhdbmggdcpncgikdmhepco/"
+  ]
+}
