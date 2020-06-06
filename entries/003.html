@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <title>Ryan Bas' Blog</title>
+    </head>
+    <nav id="top">
+        [<a href="../index.html">Home</a>]
+        [<a href="002.html">Previous Entry</a>]
+    </nav>
+    <body>
+        <div>
+            <h1>Entry 3 - <time datetime="2020-06-05 21:23:32.000-0400">2020-06-04 21:23:32</time> - Getting Organized</h1>
+            <h2>No Coding</h2>
+            <p>Today I wanted to take a break from coding so I decided to focus on the organization and navigation of my blog. I added pages because I had it in the back of my mind and I have a friend that reads who suggested it. I was going to do it for entry 2 but the thought of writing the extension excited me so much I focused on that instead. This seems to have worked out better because with 3 pages I was able to create navigation on entry 2 that I'm happy with and I have an easy pattern I can follow to create more pages. I can envision this pattern scaling for as long as I need it to. Well, until I have 1000 pages and the default sort order in my file explorer doesn't match up with the order of my entries but I'm confident that problem won't exist long before I hit 1000 entries so it's not worth thinking about.</p>
+            <h2>The Changes</h2>
+            <p>The homepage contains links to every entry and there's a navigation link on top to go to the newest entry. On each entry there's a home link. If it's applicable there's also optional next and previous entry links. I also updated the date in my headings text and used the <code>&lt;time&gt;</code> element to encode the date, time, and timezone so I don't lose that information. That little bit of extra work allowed me to clean up the page and remove the rendering of the timezone without using CSS yet.</p>
+            <p>Behind the scenes, I've added some meta elements for charset and author. I also organized my entries into an entries folder starting with 001 to make my update process easier.</p>
+            <p>Some decisions I made deliberately to make refactoring using search/replace easy and to force myself how to think about building this blog piece by piece.</p>
+            <p>Another decision I made that made my life easier was using relative links. I wanted to use absolute links, but it made my process more difficult and impossible to debug locally. Also, after some research it seems like relative links are better for web crawlers.</p>
+            <p>I'm also trying to use html as semantically as possible. Some examples of this is using tags like <code>&lt;code&gt;</code>, <code>&lt;nav&gt;</code>, and <code>&lt;time&gt;</code>. Part of this is because when I start getting into templatizing my website, I'll be able to write the parser myself and it should be as straightforward as possible. This also makes refactoring through search/replace easier.</p>
+            <h2>Organizing Myself</h2>
+            <p>One thing I know about myself is that I work best when I have well-defined structure that I can focus on. I'm no good at creating the structure for myself, but once I have it I can follow any process almost robotically. I can live with inefficiency as long as there's a well-defined structure to it. If there's an ill-definied inefficiency which makes mistakes easy to make I'll seek out a solution to reduce the potential for mistakes.</p>
+            <p>The pattern I have for creating a new blog page is mostly well-defined and works for me right now, but it does have some inefficiencies that can result in mistakes. Those will probably be the first things I fix. The process is:
+                <ol>
+                    <li>In index.html increment the newest entry href to the next number</li>
+                    <li>In index.html add a new <code>&lt;li&gt;</code> to the index.html by copying the last <code>&lt;li&gt;</code></li>
+                    <li>In index.html increment the <code>href</code> in the new <code>&lt;li&gt;</code> as well as the entry number, date, and title</li>
+                    <li>In the current newest entry add a next entry link to the soon to be newest entry</li>
+                    <li>Copy the current newest entry html file and increment the file number when copying</li>
+                    <li>In the newly created entry remove the previous entry link and rename next entry to previous entry</li>
+                    <li>In the newly created entry find the first div child of the body and remove the content</li>
+                    <li>In index.html copy the title for the new entry and set it as the <code>&lt;h1&gt;</code> for the new entry</li>
+                    <li>There should be no broken links at this point and navigation on all pages should work</li>
+                    <li>In the newly created entry write my post</li>
+                    <li>Proofread post, get the time from the Chrome console using <code>new Date()</code>, and put it in index.html and the newly created entry</li>
+                </ol>
+            </p>
+            <p>By writing out the instructions here it helped me refine the process. I'm going to try to finish the reload plugin and follow this process to a T tomorrow when I create the blog post. I'm going to note any inefficiencies or mistakes I made, and work on those next. That thinking of processes is directly inspired from a book called <a href="https://www.oreilly.com/library/view/the-phoenix-project/9781457191350/">The Phoenix Project</a>. The Phoenix Project is about applying the <a href="https://en.wikipedia.org/wiki/Theory_of_constraints">theory of constaints</a> to devops. I could write a whole other post on how much I love that book. The Phoenix Project is based on another book, The Goal, which is a management oriented book I might find time to read someday.</p>
+            <p>I hope one thing this blog does is help me set goals and give me a greater ability to create my own structure.</p>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>

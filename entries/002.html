@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <title>Ryan Bas' Blog</title>
+    </head>
+    <nav id="top">
+        [<a href="../index.html">Home</a>]
+        [<a href="001.html">Previous Entry</a>]
+        [<a href="003.html">Next Entry</a>]
+    </nav>
+    <body>
+        <div>
+            <h1>Entry 2 - <time datetime="2020-06-04 23:22:24.000-0400">2020-06-04 23:22:24</time> - Chrome Extensions</h1>
+            <h2>The Next Step</h2>
+            <p>I couldn't stop thinking about writing my own Chrome and VSCode extensions that would automatically reload a page when I changed my index.html and thought it would be an easy thing to do. It seemed straightforward because I played around with the Chrome extension <a href="https://developer.chrome.com/extensions/nativeMessaging">Native Messaging</a> API last night, got the sample up and running, and thought I fully understood it. Even if I couldn't do the VSCode extension tonight I could at least use the native messaging to refresh with a Python script watching the directory. However there were a few issues I ran into building the Chrome extension.</p>
+            <p>The first was not being sure what kind of extension I needed. There's extension types such as apps, background scripts, and content scripts. They all have different use cases and different levels of access to Chrome APIs. The sample is an app but it didn't seem appropriate. I should have looked a little closer in the beginning at the use cases for each one. It seemed like I needed a content script because I could force it to only work on file:// URIs in the manifest so I started with that.</p>
+            <p>Turns out content scripts can't use the Native Messaging API so instead of abandoning that I found some workarounds you can use by <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Exchanging_messages">communicating with background scripts</a>. I got through the sample and was able to make clicks send events to my background script and pop up a notification. I tried to get it working using native messaging in my background script but I couldn't push messages to my extension from the native application.</p>
+            <p>After lots of frustration with that I decided I didn't need the content script and should focus on doing it with only a background script. I was getting ambitious and thinking too far ahead. I had an idea of popping up notifications after the reload after going through the sample. I couldn't even receive events though so notifications were a waste of time. So I decided to focus on using only a background script and dealing with the rest later.</p>
+            <h2>Getting Closer</h2>
+            <p>I found that there's an event you can listen to, chrome.webNavigation.onCompleted, and pass it a url filter so I can delay the extension starting when file:// urls are loaded. So that already made background scripts better. I was pretty sure I was on the right track and thought I'd be moving to the VSCode extension next. I had some minor issues I'll list below, but I understood how the communication worked.</p>
+            <p>How native messaging works on Windows:
+                <ol>
+                    <li>Put a value in the <a href="https://github.com/ryanbas/ryanbas.github.io/blob/master/src/reload_extension/host/install_host.bat">registry</a> which points to your <a href="https://github.com/ryanbas/ryanbas.github.io/blob/master/src/reload_extension/host/install_host.bat">manifest file</a> for the native application. The entry is HKCU\Software\Google\Chrome\NativeMessagingHosts\{hostname}</li>
+                    <li>When your extension calls <a href="https://github.com/ryanbas/ryanbas.github.io/blob/master/src/reload_extension/chrome/background.js#L15">connectNative</a> using {hostname} Chrome looks in the registry for where the manifest is located</li>
+                    <li>Your manifest defines a command to run, in my case a <a href="https://github.com/ryanbas/ryanbas.github.io/blob/master/src/reload_extension/host/start.bat">start.bat</a> which is launching a <a href="https://github.com/ryanbas/ryanbas.github.io/blob/master/src/reload_extension/host/send_event.py">Python script</a></li>
+                    <li>Chrome communicates with the native process using stdin and stdout</li>
+                </ol>
+            </p>
+            <p>There's values in the manifests, the registry, and your script that have to agree which meant a lot of back and forth checking all that was correct which was a bit of a headache. The major issue that I spent all my time on was an "Error when communicating with the native messaging host" message. My first step should have been turning on debug logging in Chrome, but it wasn't until after an hour or so of fumbling around that I finally did it. Turns out the error was "Native Messaging host tried sending a message that is 977472013 bytes long" which meant the message was too big. I finally clued in what I was missing from the example. It was "@echo off" at the top of the script. Without it off the bat script was echoing commands that were going to stdout and causing the onDisconnect to fire.</p>
+            <p>Other issues I ran into that took me longer to figure out than it should have:
+                <ul>
+                    <li>My registry entry value got "%~dp0/io.github.ryanbas.reload_extension.json" put into it. That slash between before my path made a huge difference so the manifest file couldn't be found.</li>
+                    <li>My extension not requesting the right permissions. This causes non-obvious errors in the console but is obvious if you're running Chrome with debug logging.</li>
+                    <li>My extension id was incorrect in the manifest file in allowed_origins. Again, the debug logging helped with this.</li>
+                </ul>
+            </p>
+            <h2>Lessons Learned</h2>
+            <p>All in all I think the biggest thing I learned is to turn on Chrome debug logging by launching Chrome with "--enable-logging=stderr --v=1" on the cmd prompt. It doesn't work using a shortcut, which was another thing I wasted time with. I also need to set a list of goals and focus on that. I got distracted doing the communication between background and content scripts and I didn't have the time to get the refresh working. The refresh should be straightforward, but my first crack at it caused Chrome to refresh the page non-stop. At least I know it's refreshing based on events from my script.</p>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>
