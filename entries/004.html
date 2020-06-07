@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <title>Ryan Bas' Blog</title>
+    </head>
+    <nav id="top">
+        [<a href="../index.html">Home</a>]
+        [<a href="003.html">Previous Entry</a>]
+    </nav>
+    <body>
+        <div>
+            <h1>Entry 4 - <time datetime="2020-06-07 00:05:33.000-0400">2020-06-07 00:05:33</time> - Useful Extension</h1>
+            <h2>Update Process</h2>
+            <p>I followed the steps tonight and found one issue. Step 6 was wrong. It said "In the newly created entry remove the previous entry link and rename next entry to previous entry" but what it should read is "In the newly created entry remove the next entry link and increment the previous entry". I felt The most error prone part of the process is copying the title from the index page to the newer entry, and also having to go back and add the time to both places. This is also where I had an error in the last post. The <code>&lt;time datetime&gt;</code> attribute was correct but the text within the tag was wrong.</p>
+            <p>The other thing is the number of steps that involved copying other things and incrementing entry numbers. I'm considering either creating a script to do a lot of that work or dive into templates. With templates, I'm still undecided on if I want to create my own templating or using something that exists already. Another option is looking into the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template"><code>&lt;template&gt;</code></a> element and generating it that way.</p>
+            <h2>Extension Updates</h2>
+            <p>I updated my extension from <a href="002.html">entry 2</a> to refresh my active tab if it uses the file:// scheme. It was fairly straigtforward after everthing I went through trying to debug the extension the when I first created it so I learned a lot from that.</p>
+            <p>The first iteration I had worked but I was adding a new event listener when <code>webNavigation.onCompleted</code> fired, which is every time the page reloaded. This caused multiple connections being created and eventually the page was reloading very quickly because there were multiple ports getting created without previous ones getting cleaned up.</p>
+            <p>To solve that I had to save a connected variable to the <code>storage.local</code> to keep track of if the nativeConnection has been created already. If it hasn't been created I create the port, add the listeners to <code>onMessage</code> and <code>onDisconnect</code> and store the port and connected flag as true.</p>
+            <p>Another issue I had is I had to remove and reinstall the extension every time I needed to update it because the port seemed to disconnect without firing the event which should set the connected flag to false. I didn't look too deeply into the issue but it was easily solved by saving <code>{connected:false}</code> in storage with <code>runtime.onInstalled</code> instead of <code>runtime.onStarted</code>. The <code>runtime.onStarted</code> fires once when your extension starts up and <code>runtime.onInstalled</code> is fired whenever your extension is installed, updated, or when Chrome is updated which is exactly what I needed. I still want to loop back and do some cleanup on the port in the <code>runtime.onSuspend</code>, but I want to research it due to the documentation saying <code>This gives the extension opportunity to do some clean up. Note that since the page is unloading, any asynchronous operations started while handling this event are not guaranteed to complete.</code></p>
+            <p>The last thing I looked into is using the <code>tabs.query</code> to get the activeTabs that match file://* to do the reload.</p>
+            <h2>Tomorrow</h2>
+            <p>I'm still need to prioritize what I'll work on next and will take a look at that tomorrow. I have a list of things I want to do and I add to the list if I think of new ideas or if I decide I'll leave something for later like the <code>runtime.onSuspend</code> I talked about above. I'm having a blast learning everything and writing about it but it's consuming a lot of my free time and I want to try to plan and estimate everything better so I don't get burned out. So my top priority right now is to organize that list and come up with a plan for next week. I might not write a blog post tomorrow, but if I do it will probably just be about the plan for next week.</p>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>
