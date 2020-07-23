@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <title>Ryan Bas' Blog</title>
+    </head>
+    <nav id="top">
+        [<a href="../index.html">Home</a>]
+        [<a href="004.html">Previous Entry</a>]
+    </nav>
+    <body>
+        <div>
+            <h1>Entry 5 - <time datetime="2020-07-22 20:35:54.000-0400">2020-07-22 20:35:54</time> - Index Templating</h1>
+            <h2>Handlebars Templates</h2>
+            <p>I got into using <a href="https://handlebarsjs.com/">Handlebars</a> for templates on the index page. I was having issues testing locally due to cross origin requests and not being able to use <code>file://</code> to put data in a js in a file and share it across the index and individual pages. I solved that by installing http-server for node.js and running that instead. Now I can put the data in <a href="../js/entry_list_data.js">one place</a> and share it everywhere.</p>
+            <p>My next goal will be to use the <code>entry_list_data.js</code> to generate the title and navagation page menu at the top of each entry.</p>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>

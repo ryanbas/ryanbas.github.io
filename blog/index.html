@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <title>Ryan Bas' Blog</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+        <script src="js/entry_list.precompiled.js"></script>
+        <script type="module">
+            import { get_entries } from "./js/entry_list_data.js"
+            window.onload = function() {
+                Handlebars.registerHelper('strip_millis', function (time) {
+                    return time.split(".")[0];
+                });
+
+                Handlebars.registerHelper('pad_left', function (num) {
+                    return num.padStart(3, "0");
+                });
+
+                var entries = get_entries();
+                var entry_list = Handlebars.templates.entry_list;
+                document.getElementById("entry_list").innerHTML = entry_list(entries);
+
+                var top = Handlebars.compile('{{#each entries}} {{#if @last}}[<a href="entries/{{pad_left @key}}.html">Newest Entry</a>]{{/if}} {{/each}}');
+                document.getElementById("top").innerHTML = top(entries);
+        }
+        </script>
+    </head>
+    <nav id="top"></nav>
+    <body>
+        <h1>Entries</h1>
+        <nav id="entry_list"></nav>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>
