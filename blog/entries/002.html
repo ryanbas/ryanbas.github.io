@@ -12,7 +12,7 @@
     </nav>
     <body>
         <div>
-            <h1>Entry 2 - <time datetime="2020-06-04 23:22:24.000-0400">2020-06-04 23:22:24</time> - Chrome Extensions</h1>
+            <h1>Entry 2 - <time datetime="2020-06-04 23:22:24-0400">2020-06-04 23:22:24</time> - Chrome Extensions</h1>
             <h2>The Next Step</h2>
             <p>I couldn't stop thinking about writing my own Chrome and VSCode extensions that would automatically reload a page when I changed my index.html and thought it would be an easy thing to do. It seemed straightforward because I played around with the Chrome extension <a href="https://developer.chrome.com/extensions/nativeMessaging">Native Messaging</a> API last night, got the sample up and running, and thought I fully understood it. Even if I couldn't do the VSCode extension tonight I could at least use the native messaging to refresh with a Python script watching the directory. However there were a few issues I ran into building the Chrome extension.</p>
             <p>The first was not being sure what kind of extension I needed. There's extension types such as apps, background scripts, and content scripts. They all have different use cases and different levels of access to Chrome APIs. The sample is an app but it didn't seem appropriate. I should have looked a little closer in the beginning at the use cases for each one. It seemed like I needed a content script because I could force it to only work on file:// URIs in the manifest so I started with that.</p>
