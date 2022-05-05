@@ -1,3 +1,4 @@
+use ::phf::phf_map;
 use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
@@ -24,6 +25,63 @@ struct Response {
     status_line: String,
     file_path: String,
 }
+
+// TODO: Will there be StaticEndpoint and DynamicEndpoint?
+#[derive(PartialEq, Debug)]
+struct Endpoint {
+    http_path: &'static str,
+    file_path: &'static str,
+}
+
+/// All valid Endpoints. Add to this Map and the filesystem to add a page.
+/// These will be pages that can be read off the file system and served.
+/// Then another Map can be used to map dynamic endpoints to a function that will generate the response.
+static STATIC_ENDPOINTS: phf::Map<&'static str, Endpoint> = phf_map! {
+    "/" => Endpoint {
+        http_path: "/",
+        file_path: "blog/index.html",
+    },
+    "/index.html" => Endpoint {
+        http_path: "/index.html",
+        file_path: "blog/index.html",
+    },
+    "/blog" => Endpoint {
+        http_path: "/blog",
+        file_path: "blog/index.html",
+    },
+    "/blog/" => Endpoint {
+        http_path: "/blog/",
+        file_path: "blog/index.html",
+    },
+    "/blog/index.html" => Endpoint {
+        http_path: "/blog/index.html",
+        file_path: "blog/index.html",
+    },
+    "/blog/entries/001.html" => Endpoint {
+        http_path: "/blog/entries/001.html",
+        file_path: "blog/entries/001.html",
+    },
+    "/blog/entries/002.html" => Endpoint {
+        http_path: "/blog/entries/002.html",
+        file_path: "blog/entries/002.html",
+    },
+    "/blog/entries/003.html" => Endpoint {
+        http_path: "/blog/entries/003.html",
+        file_path: "blog/entries/003.html",
+    },
+    "/blog/entries/004.html" => Endpoint {
+        http_path: "/blog/entries/004.html",
+        file_path: "blog/entries/004.html",
+    },
+    "/blog/entries/005.html" => Endpoint {
+        http_path: "/blog/entries/005.html",
+        file_path: "blog/entries/005.html",
+    },
+    "/blog/entries/006.html" => Endpoint {
+        http_path: "/blog/entries/006.html",
+        file_path: "blog/entries/006.html",
+    },
+};
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:5055").unwrap();
@@ -69,21 +127,6 @@ fn handle_connection(mut stream: TcpStream) {
     stream.flush().unwrap();
 }
 
-/// All the valid endpoints that can be used. To add a new page append to this array.
-const ENDPOINTS: &'static [&'static str] = &[
-    "/",
-    "/blog",
-    "/blog/",
-    "/blog/index.html",
-    "/index.html",
-    "/blog/entries/001.html",
-    "/blog/entries/002.html",
-    "/blog/entries/003.html",
-    "/blog/entries/004.html",
-    "/blog/entries/005.html",
-    "/blog/entries/006.html",
-];
-
 /// Parses the request from the buffer and generates a Request object
 /// Returns None if the request uses an invalid method (POST, PUT, etc)
 /// but will return a valid request for paths that do not exist.
@@ -105,81 +148,22 @@ fn parse_request(buffer: &[u8]) -> Option<Request> {
 
 /// Maps a Request to a Response. Every Request will be mapped to a Response
 /// and if the path doesn't exist it will return a 404 response.
-/// TODO review the logic of this function; do we really want
 fn build_response(request: Request) -> Response {
-    match request.path {
-        path if is_index(&path) => Response {
+    STATIC_ENDPOINTS
+        .get(&request.path)
+        .map(|endpoint| Response {
             status_line: OK_STATUS_LINE.to_string(),
-            file_path: String::from("blog/index.html"),
-        },
-        path if is_blog(&path) => Response {
-            status_line: OK_STATUS_LINE.to_string(),
-            // cut off the leading '/' and use relative paths
-            // TODO I'd rather this be an absolute path and add the concept of a
-            // root path that the server can't access outside of it
-            file_path: path[1..].to_string(),
-        },
-        _ => Response {
+            file_path: endpoint.file_path.to_string(),
+        })
+        .unwrap_or_else(|| Response {
             status_line: NOT_FOUND_STATUS_LINE.to_string(),
-            file_path: String::from("blog/404_not_found.html"),
-        },
-    }
-}
-
-fn is_index(path: &String) -> bool {
-    path == ENDPOINTS[0]
-        || path == ENDPOINTS[1]
-        || path == ENDPOINTS[2]
-        || path == ENDPOINTS[3]
-        || path == ENDPOINTS[4]
-}
-
-fn is_blog(path: &String) -> bool {
-    path == ENDPOINTS[5]
-        || path == ENDPOINTS[6]
-        || path == ENDPOINTS[7]
-        || path == ENDPOINTS[8]
-        || path == ENDPOINTS[9]
-        || path == ENDPOINTS[10]
+            file_path: "blog/404_not_found.html".to_string(),
+        })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_slash_is_index() {
-        let test_buf = String::from("/");
-        assert!(is_index(&test_buf));
-    }
-
-    #[test]
-    fn test_index_html_is_index() {
-        let test_buf = String::from("/index.html");
-        assert!(is_index(&test_buf));
-    }
-
-    #[test]
-    fn test_blog_is_index() {
-        let test_buf = String::from("/blog");
-        assert!(is_index(&test_buf));
-
-        let test_buf = String::from("/blog/");
-        assert!(is_index(&test_buf));
-    }
-
-    #[test]
-    fn test_blog_index_html_is_index() {
-        let test_buf = String::from("/blog/index.html");
-        assert!(is_index(&test_buf));
-    }
-
-    #[test]
-    fn test_blog_entry_is_not_index() {
-        let test_buf = String::from("/blog/entries/001.html");
-
-        assert!(!is_index(&test_buf));
-    }
 
     #[test]
     fn test_all_endpoints_generate_correct_response() {
