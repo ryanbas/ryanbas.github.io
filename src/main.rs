@@ -57,6 +57,10 @@ static STATIC_ENDPOINTS: phf::Map<&'static str, Endpoint> = phf_map! {
         http_path: "/blog/index.html",
         file_path: "blog/index.html",
     },
+    "/keybase.txt" => Endpoint {
+        http_path: "/keybase.txt",
+        file_path: "keybase.txt",
+    },
     "/blog/entries/001.html" => Endpoint {
         http_path: "/blog/entries/001.html",
         file_path: "blog/entries/001.html",
@@ -80,6 +84,10 @@ static STATIC_ENDPOINTS: phf::Map<&'static str, Endpoint> = phf_map! {
     "/blog/entries/006.html" => Endpoint {
         http_path: "/blog/entries/006.html",
         file_path: "blog/entries/006.html",
+    },
+    "/blog/entries/007.html" => Endpoint {
+        http_path: "/blog/entries/007.html",
+        file_path: "blog/entries/007.html",
     },
 };
 
@@ -309,6 +317,32 @@ mod tests {
                 file_path: String::from("blog/entries/006.html")
             }
         );
+
+        let request = Request {
+            method: RequestMethod::GET,
+            path: String::from("/blog/entries/007.html"),
+            version: String::from("HTTP/1.1\n\r"),
+        };
+        assert_eq!(
+            build_response(request),
+            Response {
+                status_line: String::from("HTTP/1.1 200 OK"),
+                file_path: String::from("blog/entries/007.html")
+            }
+        );
+
+        let request = Request {
+            method: RequestMethod::GET,
+            path: String::from("/keybase.txt"),
+            version: String::from("HTTP/1.1\n\r"),
+        };
+        assert_eq!(
+            build_response(request),
+            Response {
+                status_line: String::from("HTTP/1.1 200 OK"),
+                file_path: String::from("keybase.txt")
+            }
+        );
     }
 
     #[test]
@@ -328,7 +362,7 @@ mod tests {
 
         let request = Request {
             method: RequestMethod::GET,
-            path: String::from("/blog/entries/007.html"),
+            path: String::from("/blog/entries/008.html"),
             version: String::from("HTTP/1.1\n\r"),
         };
         assert_eq!(

@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/ryanbas
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://ryanbas.github.io
+  * I am ryanbas (https://keybase.io/ryanbas) on keybase.
+  * I have a public key ASCfDB_y7kb13ugGH9D4ZHK5SVuzBs9tGPs576F-PLyUqgo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01209f0c1ff2ee46f5dee8061fd0f86472b9495bb306cf6d18fb39efa17e3cbc94aa0a",
+      "host": "keybase.io",
+      "kid": "01209f0c1ff2ee46f5dee8061fd0f86472b9495bb306cf6d18fb39efa17e3cbc94aa0a",
+      "uid": "0d3cab82f65b579a1ca3d5b8d37a0819",
+      "username": "ryanbas"
+    },
+    "merkle_root": {
+      "ctime": 1651774507,
+      "hash": "cd69799a276a41087955018731b16be0ff2811fa5f27f24d66368ae27c112faf9f23ba1a232f0127eedb0f3a4b01b832990eebd718984402643aa3987621492b",
+      "hash_meta": "aca4bdd961506eb74705dd48849ba39368573f7e6367f19e4506523b88eee69c",
+      "seqno": 22425774
+    },
+    "service": {
+      "entropy": "16tP1K33GWcYwwDHR6euJADf",
+      "hostname": "ryanbas.github.io",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.9.0"
+  },
+  "ctime": 1651774553,
+  "expire_in": 504576000,
+  "prev": "4a488ae03430eeaf8d54aa5aaaf3b582cd7eb90f40ff3af517f9c58208ad75e2",
+  "seqno": 18,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgnwwf8u5G9d7oBh/Q+GRyuUlbswbPbRj7Oe+hfjy8lKoKp3BheWxvYWTESpcCEsQgSkiK4DQw7q+NVKpaqvO1gs1+uQ9A/zr1F/nFggitdeLEIEyOTt3Yro+t3ZjEJ/AzULUTjCKgSQiorPNgRf80ERByAgHCo3NpZ8RANqmeNBWLH6oMnQzB0u49pOQwztg9bDGxpBykHJbCh41eg6iJI8AkAi2CQSWAvqLildloMTXcrLVBMDQeTJJeA6hzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEINGP65K0T2F/qLgNXJdJb0lxhf0uHb6SOMmXcXnFb5Lmo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/ryanbas
+
+==================================================================
