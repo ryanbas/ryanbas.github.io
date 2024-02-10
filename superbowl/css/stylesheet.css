@@ -1,0 +1,61 @@
+html {
+  max-width: 110ch;
+  /* larger spacing on larger screens, very small spacing on tiny screens */
+  padding: calc(1vmin + .5rem);
+  /* shorthand for margin-left/margin-right */
+  margin-inline: auto;
+  /* fluid sizing: https://frontaid.io/blog/fluid-typography-2d-css-locks-clamp/ */
+  font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
+  /* use system font stack: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
+  font-family: system-ui
+}
+
+/* increase line-height for everything except headings */
+body :not(:is(h1,h2,h3,h4,h5,h6,time)) {
+  line-height: 1.75;
+  color: #555;
+}
+
+/* Make headers and bold elements darker */
+h1,
+h2,
+strong {
+  color: #333;
+}
+
+/* Use default link coloring */
+:link { color: #0000EE; }
+:visited { color: #551A8B; }
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid lightsteelblue;
+}
+
+thead th:nth-child(1) {
+  width: 30%;
+}
+
+thead th:nth-child(2) {
+  width: 20%;
+}
+
+thead th:nth-child(3) {
+  width: 15%;
+}
+
+thead th:nth-child(4) {
+  width: 35%;
+}
+
+th,
+td {
+  padding: 20px;
+}
+
+table, th, td
+{
+    border: 1px solid black;
+}

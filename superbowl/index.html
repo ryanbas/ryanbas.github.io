@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <link rel="stylesheet" href="css/stylesheet.css">
+        <title>Superbowl Squares</title>
+    </head>
+    <nav id="top">
+        [<a href="/blog/index.html">Blog</a>]
+    </nav>
+    <body>
+        <table id="squares">
+            <tbody id="squares-tbody"></tbody>
+        </table>
+
+        <div>
+            <div>
+                <button id="randomize-numbers" onclick="randomizeNumbers();">Randomize Numbers</button>
+            </div>
+            <div>
+                <form id="players">
+                    <div>
+                        <input type="text" name="player-1" />
+                    </div>
+                    <input type="button" id="form-add-player" onclick="addPlayer(2);" value="Add Player" />
+                    <input type="button" id="form-randomize-names" onclick="randomizeNames();" value="Randomize Names" />
+                </form>
+            </div>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+    <script type="text/javascript" src="js/main.js" defer></script>
+</html>
