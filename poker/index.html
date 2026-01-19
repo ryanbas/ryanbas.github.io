@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <link rel="stylesheet" href="css/stylesheet.css">
+        <title>Poker Chip Calculator</title>
+    </head>
+    <nav id="top">
+        [<a href="/blog/index.html">Blog</a>]
+    </nav>
+    <body>
+        <div id="game-setup" class="form">
+            <h2>Game Setup</h2>
+            <div class="form-group">
+                <label for="cash-buy-in">Buy-In Amount ($)</label>
+                <input id="cash-buy-in" type="number" value="50" />
+            </div>
+            <div class="form-group">
+                <label for="chip-buy-in">Chips per Buy-In</label>
+                <input id="chip-buy-in" type="number" value="200" />
+            </div>
+            <div class="form-group">
+                <label for="cash-per-chip">Cash per Chip</label>
+                <input id="cash-per-chip" type="number" value="0.25" readonly disabled />
+            </div>  
+        </div>
+        <div id="player-setup" class="form">  
+            <h2>Add Players</h2>
+            <div id="add-player" class="form-group">
+                <label for="player-add-input">New Player</label>
+                <input id="add-player-input" type="text" placeholder="Player Name" />
+                <input id="add-player-button" type="button" value="Add Player" />
+            </div>
+        </div>
+        <div id="active-players" class="empty">
+            <h2>Players</h2>
+            <table id="players">
+                <thead>
+                    <th scope="col">Player</th>
+                    <th scope="col">Buy-Ins</th>
+                    <th scope="col">Final Chip Count</th>
+                    <th scope="col">P&L</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+    <script type="text/javascript" src="js/main.js" defer></script>
+</html>

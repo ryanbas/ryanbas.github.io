@@ -1,0 +1,69 @@
+html {
+  max-width: 110ch;
+  /* larger spacing on larger screens, very small spacing on tiny screens */
+  padding: calc(1vmin + .5rem);
+  /* shorthand for margin-left/margin-right */
+  margin-inline: auto;
+  /* fluid sizing: https://frontaid.io/blog/fluid-typography-2d-css-locks-clamp/ */
+  font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
+  /* use system font stack: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
+  font-family: system-ui
+}
+
+/* increase line-height for everything except headings */
+body :not(:is(h1,h2,h3,h4,h5,h6,time)) {
+  line-height: 1.75;
+  color: #555;
+}
+
+/* Make headers and bold elements darker */
+h1,
+h2,
+strong {
+  color: #333;
+}
+
+/* Use default link coloring */
+:link { color: #0000EE; }
+:visited { color: #551A8B; }
+
+.form {
+  display: grid;
+  /* Creates two columns: one auto-sized for labels, one for inputs */
+  grid-template-columns: auto 1fr; 
+  gap: 10px; /* Space between rows and columns */
+  max-width: 400px
+}
+
+.form-group {
+  display: contents; /* Makes children participate directly in the grid */
+}
+
+label {
+  text-align: right; /* Aligns label text to the right, close to the input */
+  padding-right: 10px; /* Adds space between label and input */
+  grid-column: 1; /* Places labels in the first column */
+}
+
+input {
+  grid-column: 2; /* Places inputs in the second column */
+  width: 75%; /* Ensures inputs fill the second column width consistently */
+  box-sizing: border-box; /* Ensures padding/border doesn't add to the width */
+}
+
+.empty {
+    display: none;
+}
+
+table {
+    max-width: 400px
+}
+
+th, td {
+  padding: 8px; /* Adds space between the content and the border */
+  text-align: center;
+}
+
+td input {
+    text-align: center;
+}
