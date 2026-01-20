@@ -14,6 +14,10 @@
 
     function loadFromStorage() {
         playerNames = JSON.parse(localStorage.getItem("playerNames"));
+        if (playerNames === null) {
+            playerNames = [];
+        }
+
         playerNames.forEach(playerName => addPlayerRow(playerName))
     }
 
