@@ -50,3 +50,8 @@ td input {
 #warning-text {
   color: red;
 }
+
+.remove-player-icon {
+  width: 1em;
+  height: 1em;
+}

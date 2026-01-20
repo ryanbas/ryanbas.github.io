@@ -8,24 +8,37 @@
     const playersTable = document.getElementById("players");
     const calculatePlButton = document.getElementById("calculate-pl");
     const warningText = document.getElementById("warning-text");
+    let playerIndex = 0;
     let playerCount = 0;
+    let playerNames = [];
+
+    function loadFromStorage() {
+        playerNames = JSON.parse(localStorage.getItem("playerNames"));
+        playerNames.forEach(playerName => addPlayerRow(playerName))
+    }
+
+    function saveToStorage() {
+        localStorage.setItem("playerNames", JSON.stringify(playerNames));
+    }
 
     function main() {
-        cashBuyIn.addEventListener("change", updateSetupInputs);
-        chipBuyIn.addEventListener("change", updateSetupInputs);
-        addPlayerInput.addEventListener("input", updateAddPlayerButton);
-        addPlayerButton.addEventListener("click", addPlayer);
-        calculatePlButton.addEventListener("click", calculatePl);
+        loadFromStorage();
+
+        cashBuyIn.addEventListener("change", updateSetupInputsAction);
+        chipBuyIn.addEventListener("change", updateSetupInputsAction);
+        addPlayerInput.addEventListener("input", updateAddPlayerButtonAction);
+        addPlayerButton.addEventListener("click", addPlayerAction);
+        calculatePlButton.addEventListener("click", calculatePnlAction);
 
         addPlayerInput.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
-                addPlayer();
+                addPlayerAction();
             }
         });
     }
 
-    function updateSetupInputs(event) {
+    function updateSetupInputsAction(event) {
         const srcElement = event.srcElement;
         if (srcElement.value.trim() === "") {
             srcElement.value = 0;
@@ -39,26 +52,47 @@
         cashPerChip.value = chipsPerCashAmount.toFixed(2);
     }
 
-    function updateAddPlayerButton(event) {
+    function updateAddPlayerButtonAction(event) {
         const playerName = event.srcElement.value.trim().toLowerCase();
         const capitalizedPlayerName = playerName.replace(/^./, (c) => c.toUpperCase());
         event.srcElement.value = capitalizedPlayerName;
         addPlayerButton.value = "Add " + capitalizedPlayerName;
     }
 
-    function addPlayer() {
-        const newPlayer = addPlayerInput.value;
-        if (newPlayer.trim() === "") {
+    function removePlayerAction(event) {
+        const rowToRemove = event.srcElement.parentElement.parentElement;
+        const nameToRemove = rowToRemove.querySelector(".player-name").textContent;
+
+        playerNames = playerNames.filter(name => name !== nameToRemove);
+        rowToRemove.remove();
+        saveToStorage();
+
+        playerCount -= 1;
+        if (playerCount === 0) {
+            activePlayers.classList.add("empty");
+        }
+    }
+
+    function addPlayerAction() {
+        const newPlayerName = addPlayerInput.value.trim();
+        if (newPlayerName === "") {
             return;
         }
 
+        addPlayerRow(newPlayerName);
+        playerNames.push(newPlayerName);
+        saveToStorage();
+    }
+
+    function addPlayerRow(newPlayerName) {
         const newRow = playersTable.insertRow(-1);
         const nameCell = newRow.insertCell(0);
         const buyInsCell = newRow.insertCell(1);
         const finalChipCountCell = newRow.insertCell(2);
-        const pnl = newRow.insertCell(3);
+        const pnlCell = newRow.insertCell(3);
+        const removePlayer = newRow.insertCell(4);
+        const playerId = "player-" + playerIndex + "-";
 
-        const playerId = "player-" + playerCount + "-";
         const buyInsInput = document.createElement("input");
         buyInsInput.name = playerId + "buy-ins";
         buyInsInput.value = 1;
@@ -71,19 +105,29 @@
         finalChipCountInput.type = "number";
         finalChipCountInput.classList.add("skinny-input");
 
-        nameCell.textContent = newPlayer;
+        const removePlayerButton = document.createElement("input");
+        removePlayerButton.name = playerId + "remove-button";
+        removePlayerButton.type = "image";
+        removePlayerButton.src = "images/remove-player.svg";
+        removePlayerButton.classList.add("remove-player-icon");
+        removePlayerButton.addEventListener("click", removePlayerAction);
+
+        nameCell.classList.add("player-name");
+        nameCell.textContent = newPlayerName;
         buyInsCell.appendChild(buyInsInput);
         finalChipCountCell.appendChild(finalChipCountInput);
-        pnl.textContent = "$0.00";
-        pnl.classList.add("pnl-cell");
+        pnlCell.classList.add("pnl-cell");
+        pnlCell.textContent = "$0.00";
+        removePlayer.appendChild(removePlayerButton);
 
         activePlayers.classList.remove("empty");
         addPlayerInput.value = "";
         addPlayerButton.value = "Add Player";
+        playerIndex += 1;
         playerCount += 1;
     }
 
-    function calculatePl(event) {
+    function calculatePnlAction(event) {
         let rows = playersTable.rows;
         let totalBuyIns = 0;
         let totalChips = 0;

@@ -16,7 +16,7 @@
         <h1>Cash Game Poker Payouts</h1>
         <p>This little app will calculate profit & loss for each player in your poker cash game.</p>
         <p>Start by filling in the Buy-In Amount for the game and how many chips each Buy-In will give players.</p>
-        <p>Add players at the bottom until everybody in your cash game is in the table.</p>
+        <p>Add players at the bottom until everybody in your cash game is in the table. Players can be removed by clicking the <img src="images/remove-player.svg" class="remove-player-icon"> icon. Players are saved for the next time you visit this page but the chip counts reset.</p>
         <p>At the end of your game fill in how many Buy-Ins each player paid for and their final chip count and click "Calculate P&L" to calculate the profit & loss for each player.</p>
         <p></p>
         <div id="game-setup" class="form">
@@ -50,6 +50,7 @@
                     <th scope="col">Buy-Ins</th>
                     <th scope="col">Final Chip Count</th>
                     <th scope="col">P&L</th>
+                    <th scope="col"></th>
                 </thead>
                 <tbody id="players"></tbody>
             </table>
