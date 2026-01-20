@@ -3,13 +3,21 @@
     <head>
         <meta charset="utf-8">
         <meta name="author" content="Ryan Bas">
+        <link rel="stylesheet" href="../css/site-stylesheet.css">
         <link rel="stylesheet" href="css/stylesheet.css">
         <title>Poker Chip Calculator</title>
     </head>
     <nav id="top">
-        [<a href="/blog/index.html">Blog</a>]
+        [<a href="/">Home</a>]
+        [<a href="/blog/">Blog</a>]
     </nav>
     <body>
+        <h1>Cash Game Poker Payouts</h1>
+        <p>This little app will calculate profit & loss for each player in your poker cash game.</p>
+        <p>Start by filling in the Buy-In Amount for the game and how many chips each Buy-In will give players.</p>
+        <p>Add players at the bottom until everybody in your cash game is in the table.</p>
+        <p>At the end of your game fill in how many Buy-Ins each player paid for and their final chip count and click "Calculate P&L" to calculate the profit & loss for each player.</p>
+        <p></p>
         <div id="game-setup" class="form">
             <h2>Game Setup</h2>
             <div class="form-group">
@@ -35,17 +43,19 @@
         </div>
         <div id="active-players" class="empty">
             <h2>Players</h2>
-            <table id="players">
+            <table>
                 <thead>
                     <th scope="col">Player</th>
                     <th scope="col">Buy-Ins</th>
                     <th scope="col">Final Chip Count</th>
                     <th scope="col">P&L</th>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody id="players"></tbody>
             </table>
+            <div id="warning-text"></div>
+            <div>
+                <input id="calculate-pl" type="button" value="Calculate P&L" class="center" />
+            </div>
         </div>
     </body>
     <footer>
