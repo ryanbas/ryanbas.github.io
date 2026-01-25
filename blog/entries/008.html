@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Ryan Bas">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="/css/site-stylesheet.css">
+        <title>Ryan Bas' Blog</title>
+    </head>
+    <nav id="top">
+        [<a href="/">Home</a>]
+        [<a href="/blog/">Blog Index</a>]
+        [<a href="007.html">Previous Entry</a>]
+    </nav>
+    <body>
+        <div>
+            <h1>Entry 8 - <time datetime="2026-01-25 14:30:27-0500">2026-01-25 14:30:27</time> - My Little Webapps</h1>
+            <h2>Back To Coding (and blogging maybe?)</h2>
+            <p>I'm getting back into coding in my free time lately and have been enjoying it a lot. I've written a few small webapps using plain old <a href="http://vanilla-js.com/" target="_blank" rel="noopener noreferrer">Vanilla JS</a> to help make things easier for myself and friends.</p>
+            <h2>Superbowl Squares App</h2>
+            <p>The first one I actually wrote 2 years ago. It's my <a href="/superbowl/">Superbowl Squares</a> app which is a fun game to play while watching the Superbowl. People take turns writing their name in 10x10 grid of squares until all the squares are taken. Then 0-9 are randomly assigned to the top and left axis with the top usually being the home team. At the end of each quarter whoever has their name in the square corresponding to the last digit of the scores wins the quarter! So if the score is 10-3 for the home team whoever has the 0 in the top axis and 3 for the left axis wins that quarter. You really hope for the squares that have 0, 3, and 7 because they're the most common digits, but with extra points getting missed from time to time it makes it a little more exciting for the other numbers. In our game the 1st and 3rd quarter gives you your entry back, the halftime score gives you double your entry, and the final score takes the rest.</p>
+            <p>My app lets you input all the players in the game and will randomly assign all the squares to people. Any leftovers are BLANK and my friends usually rollover any BLANK wins to the next quarter. Then you randomize the numbers and voila! You have your Superbowl Squares filled out in seconds and can focus on adding the finishing touches to your chili or making prop bets with people on the coin toss.</p>
+            <h2>Cash Game Poker Payouts</h2>
+            <p>The next app I wrote over this past weekend. I joined a monthly poker game with some friends and wrote a <a href="/poker/">Cash Game Poker Payouts</a> app to help figure out how much each person owes or gets back at the end of the game.</p>
+            <p>This app is a little more refined and I'm quite proud of the final product. It all starts with the game setup section where you input the cash buy-in amount and how many chips a buy-in will get you. It tells you how much each chip is worth and is computed as you update the inputs. We usually do a $50 buy-in for 200 chips with 1/2 blinds so we're playing a 25¢/50¢ game. Which is the biggest stakes I've ever played! When I was in my covid online poker phase I was only playing 1¢/2¢ games.</p>
+            <p>After the initial setup you add players and each person gets a row in a table with the number of buy-ins they went in for (we allow rebuys) and their final chip count. Fill in everything at the end of the game, click Calculate P&L, and voila again! The table is updated with how much cash each person won or lost. There's even a little warning when the final chip count doesn't match the number of buy-ins.</p>
+            <p>It even uses local storage to save the players you entered so if you have a recurring game with the same people you don't have to put them in every time. You can also remove players from the table. Overall, I really like how I did the player input for the poker app vs how I did it with the Superbowl Squares. I'll probably go back to the Superbowl Squares and update the way players are added to match the poker app and add the local storage saving.</p>
+            <h2>Other Things</h2>
+            <p>I decided to not continue with the Rust webserver I started in <a href="006.html">Entry 6</a> because I wanted to focus more on making fun javascript apps and modules instead of also learning Rust in the process. One day I might return to it but for now my todo list involves writing a JS module the wraps localStorage to save versioned state and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components" target="_blank" rel="noopener noreferrer">Web Component</a>/JS Module for my poker app's user table I can also make use of in the superbowl squares app.</p>
+        </div>
+    </body>
+    <footer>
+        [<a href="#top">TOP</a>]
+    </footer>
+</html>
