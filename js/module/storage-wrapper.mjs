@@ -38,12 +38,7 @@ export default class StorageWrapper {
         }
 
         function findMigration(from, to) {
-            console.log("from is " + typeof from);
-            console.log("from is " + typeof to);
-            console.log("looking for migration from " + from + " to " + to);
-            const found = migrations.find(m => m.fromVersion === from && m.toVersion === to);
-            console.log("found " + found);
-            return found;
+            return migrations.find(m => m.fromVersion === from && m.toVersion === to);
         }
 
         const storageVersion = this.#getStorageVersion();
@@ -74,39 +69,66 @@ export default class StorageWrapper {
         return this;
     }
 
-    save(key, value) {
-        if (typeof key !== "string") {
-            throw new TypeError("keys must be typeof 'string'");
-        }
+    saveString(key, value) {
+        this.#checkKey(key);
 
         if (key === this.#INTERNAL_VERSION_KEY) {
             throw new Error(this.#INTERNAL_VERSION_KEY + " is special key and cannot be saved");
         }
 
         this.#saveVersion();
-        this.#setItemWithNamespace(key, value);
+        this.#setItem(key, value);
     }
 
-    load(key) {
-        return this.#getItemWithNamespace(key);
+    loadString(key) {
+        return this.#getItem(key);
+    }
+
+    saveArray(key, array) {
+        this.#checkKey(key);
+
+        if (!Array.isArray(array)) {
+            throw new TypeError("value must be an array");
+        }
+
+        this.#setItem(key, JSON.stringify(array));
+    }
+
+    loadArray(key) {
+        try {
+            const fromStorage = JSON.parse(this.#getItem(key));
+            if (!Array.isArray(fromStorage)) {
+                throw new TypeError("value loaded was not an array");
+            }
+
+            return fromStorage;
+        } catch (error) {
+            throw new TypeError("value loaded was not an array");
+        }
+    }
+
+    #checkKey(k) {
+        if (typeof k !== "string") {
+            throw new TypeError("keys must be typeof 'string'");
+        }
     }
 
     #saveVersion() {
         if (this.#version) {
-            this.#setItemWithNamespace(this.#INTERNAL_VERSION_KEY, this.#version);
+            this.#setItem(this.#INTERNAL_VERSION_KEY, this.#version);
         }
     }
 
-    #setItemWithNamespace(key, value) {
+    #setItem(key, value) {
         this.#storage.setItem(this.#namespace + ":" + key, value);
     }
 
-    #getItemWithNamespace(key) {
+    #getItem(key) {
         return this.#storage.getItem(this.#namespace + ":" + key);
     }
 
     #getStorageVersion() {
-        return parseInt(this.load(this.#INTERNAL_VERSION_KEY), 10);
+        return parseInt(this.loadString(this.#INTERNAL_VERSION_KEY), 10);
     }
 
     get namespace() {

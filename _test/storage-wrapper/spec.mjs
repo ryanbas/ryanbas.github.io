@@ -49,10 +49,10 @@ describe("StorageWrapper", () => {
         };
     });
 
-    describe("save(key, value)", function() {
+    describe("saveString(key, value)", function() {
         it("should save string value to storage with the namespace prepended to the key", function () {
             const underTest = new StorageWrapper("save-test").withStorage(this.mockLocalStorage);
-            underTest.save("test-key", "test-value");
+            underTest.saveString("test-key", "test-value");
 
             expect(this.storage).toHaveSize(1);
             expect(this.storage["save-test:test-key"]).toBe("test-value");
@@ -60,22 +60,22 @@ describe("StorageWrapper", () => {
 
         it("should only allow string keys to be saved", function() {
             const underTest = new StorageWrapper("save-only-allows-string-keys").withStorage(this.mockLocalStorage);
-            expect(() => underTest.save(1, "")).toThrowError(TypeError, "keys must be typeof 'string'");
-            expect(() => underTest.save(1.5, "")).toThrowError(TypeError, "keys must be typeof 'string'");
-            expect(() => underTest.save([], "")).toThrowError(TypeError, "keys must be typeof 'string'");
-            expect(() => underTest.save({}, "")).toThrowError(TypeError, "keys must be typeof 'string'");
-            expect(() => underTest.save(true, "")).toThrowError(TypeError, "keys must be typeof 'string'");
+            expect(() => underTest.saveString(1, "")).toThrowError(TypeError, "keys must be typeof 'string'");
+            expect(() => underTest.saveString(1.5, "")).toThrowError(TypeError, "keys must be typeof 'string'");
+            expect(() => underTest.saveString([], "")).toThrowError(TypeError, "keys must be typeof 'string'");
+            expect(() => underTest.saveString({}, "")).toThrowError(TypeError, "keys must be typeof 'string'");
+            expect(() => underTest.saveString(true, "")).toThrowError(TypeError, "keys must be typeof 'string'");
         });
 
         it("should not allow saving directly to storage-wrapper-obj-version", function() {
             const underTest = new StorageWrapper("cant-save-storage-wrapper-obj-version").withStorage(this.mockLocalStorage);
-            expect(() => underTest.save("storage-wrapper-obj-version", 1)).toThrowError(Error, "storage-wrapper-obj-version is special key and cannot be saved");
+            expect(() => underTest.saveString("storage-wrapper-obj-version", 1)).toThrowError(Error, "storage-wrapper-obj-version is special key and cannot be saved");
             expect(this.storage).toHaveSize(0);
         });
 
         it("should save the version as storage-wrapper-obj-version to storage if the version exists", function() {
             const underTest = new StorageWrapper("version-saved-test", 5).withStorage(this.mockLocalStorage);
-            underTest.save("key", "value");
+            underTest.saveString("key", "value");
 
             expect(this.storage).toHaveSize(2);
             expect(this.storage["version-saved-test:key"]).toBe("value");
@@ -83,13 +83,13 @@ describe("StorageWrapper", () => {
         });
     });
 
-    describe("load(key)", function() {
+    describe("loadString(key)", function() {
         it("should get a string value using a key with its namespace", function () {
             this.storage["load-test:test-key"] = "test-value";
             this.storage["test-key"] = "wrong key!";
             const underTest = new StorageWrapper("load-test").withStorage(this.mockLocalStorage);
 
-            expect(underTest.load("test-key")).toBe("test-value");
+            expect(underTest.loadString("test-key")).toBe("test-value");
         });
     });
 
@@ -158,8 +158,8 @@ describe("StorageWrapper", () => {
                 fromVersion: 1,
                 toVersion: 2,
                 migrate: (storageWrapper) => {
-                    const oldUser = storageWrapper.load("old-user");
-                    storageWrapper.save("migrated-user", oldUser + "-migrated");
+                    const oldUser = storageWrapper.loadString("old-user");
+                    storageWrapper.saveString("migrated-user", oldUser + "-migrated");
                 }
             }
 
@@ -179,16 +179,16 @@ describe("StorageWrapper", () => {
                 fromVersion: 1,
                 toVersion: 2,
                 migrate: (storageWrapper) => {
-                    const oldUser = storageWrapper.load("v1-user");
-                    storageWrapper.save("v2-user", oldUser + "-migrated-v2");
+                    const oldUser = storageWrapper.loadString("v1-user");
+                    storageWrapper.saveString("v2-user", oldUser + "-migrated-v2");
                 }
             }, {
                 fromVersion: 2,
                 toVersion: 3,
                 migrate: (storageWrapper) => {
                     console.log("migrating");
-                    const oldUser = storageWrapper.load("v2-user");
-                    storageWrapper.save("v3-user", oldUser + "-migrated-v3");
+                    const oldUser = storageWrapper.loadString("v2-user");
+                    storageWrapper.saveString("v3-user", oldUser + "-migrated-v3");
                 }
             }]
 
@@ -199,6 +199,54 @@ describe("StorageWrapper", () => {
             expect(this.storage["migrate-test:v1-user"]).toBe("testuser");
             expect(this.storage["migrate-test:v2-user"]).toBe("testuser-migrated-v2");
             expect(this.storage["migrate-test:v3-user"]).toBe("testuser-migrated-v2-migrated-v3");
+        });
+    });
+
+    describe("saveArray(key, array)", function() {
+        it("should only allow array values", () => {
+            const underTest = new StorageWrapper("saveArray-only-allows-array-values");
+            expect(() => underTest.saveArray("saveArray")).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", null)).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", undefined)).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", 1)).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", 1.2)).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", "")).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", {})).toThrowError(TypeError, "value must be an array");
+            expect(() => underTest.saveArray("saveArray", true)).toThrowError(TypeError, "value must be an array");
+        });
+
+        it("should save an array", function() {
+            const underTest = new StorageWrapper("save-array").withStorage(this.mockLocalStorage);
+            underTest.saveArray("str-array", ["test", "array"]);
+            underTest.saveArray("mixed-array", ["test", 1, true]);
+
+            expect(this.storage).toHaveSize(2);
+            expect(this.storage["save-array:str-array"]).toBe('["test","array"]');
+            expect(this.storage["save-array:mixed-array"]).toBe('["test",1,true]');
+        });
+    });
+
+    describe("loadArray(key)", function() {
+        it("should throw a TypeError if the value is not an array", function() {
+            this.storage["load-array-error:string"] = "string";
+            this.storage["load-array-error:number"] = "1";
+            this.storage["load-array-error:boolean"] = "true";
+            this.storage["load-array-error:object"] = "{}";
+
+            const underTest = new StorageWrapper("load-array-error").withStorage(this.mockLocalStorage);
+            expect(() => underTest.loadArray("string")).toThrowError(TypeError, "value loaded was not an array");
+            expect(() => underTest.loadArray("number")).toThrowError(TypeError, "value loaded was not an array");
+            expect(() => underTest.loadArray("boolean")).toThrowError(TypeError, "value loaded was not an array");
+            expect(() => underTest.loadArray("object")).toThrowError(TypeError, "value loaded was not an array");
+        });
+
+        it("should load arrays", function() {
+            this.storage["load-array:str-array"] = '["test","array"]';
+            this.storage["load-array:mixed-array"] = '["test",1,true]';
+
+            const underTest = new StorageWrapper("load-array").withStorage(this.mockLocalStorage);
+            expect(underTest.loadArray("str-array")).toEqual(["test", "array"]);
+            expect(underTest.loadArray("mixed-array")).toEqual(["test", 1, true]);
         });
     });
 });
