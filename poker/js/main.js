@@ -1,3 +1,5 @@
+import StorageWrapper from "/js/module/storage-wrapper.mjs";
+
 (() => {
     const cashBuyIn = document.getElementById("cash-buy-in");
     const chipBuyIn = document.getElementById("chip-buy-in");
@@ -8,12 +10,13 @@
     const playersTable = document.getElementById("players");
     const calculatePlButton = document.getElementById("calculate-pl");
     const warningText = document.getElementById("warning-text");
+    const storage = new StorageWrapper("ryanbas.dev/poker", 1);
     let playerIndex = 0;
     let playerCount = 0;
     let playerNames = [];
 
     function loadFromStorage() {
-        playerNames = JSON.parse(localStorage.getItem("playerNames"));
+        playerNames = storage.loadArray("playerNames");
         if (playerNames === null) {
             playerNames = [];
         }
@@ -22,10 +25,32 @@
     }
 
     function saveToStorage() {
-        localStorage.setItem("playerNames", JSON.stringify(playerNames));
+        storage.saveArray("playerNames", playerNames);
+    }
+
+    function migrateStorage() {
+        const storageVersionHistory = [0, 1];
+        const migrations = [{
+            fromVersion: 0,
+            toVersion: 1,
+            migrate: (storage) => {
+                const playerNames = JSON.parse(localStorage.getItem("playerNames"));
+                if (playerNames) {
+                    storage.saveArray("playerNames", playerNames);
+                    const newPlayerNames = storage.loadArray("playerNames");
+                    const lengthsMatch = playerNames.length === newPlayerNames.length;
+                    if (lengthsMatch && playerNames.every((v, i) => v === newPlayerNames[i])) {
+                        localStorage.removeItem("playerNames");
+                    }
+                }
+            }
+        }];
+
+        storage.migrateToCurrentVersion(storageVersionHistory, migrations);
     }
 
     function main() {
+        migrateStorage();
         loadFromStorage();
 
         cashBuyIn.addEventListener("change", updateSetupInputsAction);

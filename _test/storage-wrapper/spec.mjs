@@ -1,4 +1,4 @@
-import StorageWrapper from "../../js/module/storage-wrapper.mjs";
+import StorageWrapper from "/js/module/storage-wrapper.mjs";
 
 describe("StorageWrapper", () => {
     describe("construction", function() {
@@ -186,7 +186,6 @@ describe("StorageWrapper", () => {
                 fromVersion: 2,
                 toVersion: 3,
                 migrate: (storageWrapper) => {
-                    console.log("migrating");
                     const oldUser = storageWrapper.loadString("v2-user");
                     storageWrapper.saveString("v3-user", oldUser + "-migrated-v3");
                 }

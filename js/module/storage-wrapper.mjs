@@ -76,7 +76,6 @@ export default class StorageWrapper {
             throw new Error(this.#INTERNAL_VERSION_KEY + " is special key and cannot be saved");
         }
 
-        this.#saveVersion();
         this.#setItem(key, value);
     }
 
@@ -113,13 +112,14 @@ export default class StorageWrapper {
         }
     }
 
-    #saveVersion() {
-        if (this.#version) {
-            this.#setItem(this.#INTERNAL_VERSION_KEY, this.#version);
-        }
-    }
-
     #setItem(key, value) {
+        if (this.#version) {
+            this.#storage.setItem(
+                this.#namespace + ":" + this.#INTERNAL_VERSION_KEY,
+                this.#version
+            );
+        }
+
         this.#storage.setItem(this.#namespace + ":" + key, value);
     }
 
@@ -128,7 +128,12 @@ export default class StorageWrapper {
     }
 
     #getStorageVersion() {
-        return parseInt(this.loadString(this.#INTERNAL_VERSION_KEY), 10);
+        var parsedStorageVersion = parseInt(this.loadString(this.#INTERNAL_VERSION_KEY), 10);
+        if (Number.isNaN(parsedStorageVersion)) {
+            return 0;
+        }
+
+        return parsedStorageVersion;
     }
 
     get namespace() {
