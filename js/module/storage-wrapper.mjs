@@ -45,14 +45,14 @@ export default class StorageWrapper {
         if (storageVersion !== this.#version) {
             const directMigration = findMigration(storageVersion, this.#version);
             if (directMigration) {
-                directMigration.migrate(this);
+                directMigration.migrate(this, this.#storage);
             } else {
                 for (let i = 0; i < migrations.length; i += 1) {
                     for (let j = i + 1; j < migrations.length; j += 1) {
                         const from = versionHistory[i];
                         const to = versionHistory[j];
                         
-                        findMigration(from, to)?.migrate(this);
+                        findMigration(from, to)?.migrate(this, this.#storage);
                     }
                 }
 
@@ -71,11 +71,6 @@ export default class StorageWrapper {
 
     saveString(key, value) {
         this.#checkKey(key);
-
-        if (key === this.#INTERNAL_VERSION_KEY) {
-            throw new Error(this.#INTERNAL_VERSION_KEY + " is special key and cannot be saved");
-        }
-
         this.#setItem(key, value);
     }
 
@@ -95,12 +90,15 @@ export default class StorageWrapper {
 
     loadArray(key) {
         try {
-            const fromStorage = JSON.parse(this.#getItem(key));
-            if (!Array.isArray(fromStorage)) {
-                throw new TypeError("value loaded was not an array");
-            }
+            const fromStorage = this.#getItem(key);
+            if (fromStorage) {
+                const arr = JSON.parse(fromStorage);
+                if (!Array.isArray(arr)) {
+                    throw new TypeError("value loaded was not an array");
+                }
 
-            return fromStorage;
+                return arr;
+            }
         } catch (error) {
             throw new TypeError("value loaded was not an array");
         }
@@ -109,6 +107,10 @@ export default class StorageWrapper {
     #checkKey(k) {
         if (typeof k !== "string") {
             throw new TypeError("keys must be typeof 'string'");
+        }
+
+        if (k === this.#INTERNAL_VERSION_KEY) {
+            throw new Error(this.#INTERNAL_VERSION_KEY + " is special key and cannot be saved");
         }
     }
 

@@ -64,5 +64,8 @@
     <footer>
         [<a href="#top">TOP</a>]
     </footer>
-    <script type="module" src="js/main.js" defer></script>
+    <script type="module">
+        import PokerApp from "./js/poker.mjs";
+        new PokerApp().run();
+    </script>
 </html>

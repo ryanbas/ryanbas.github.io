@@ -1,6 +1,14 @@
 import StorageWrapper from "/js/module/storage-wrapper.mjs";
 
 describe("StorageWrapper", () => {
+    beforeEach(function () {
+        this.storage = {};
+        this.mockLocalStorage = {
+            setItem: (key, value) => this.storage[String(key)] = String(value),
+            getItem: (key) => this.storage[String(key)]
+        };
+    });
+
     describe("construction", function() {
         it("should require a namespace", () => {
             expect(() => new StorageWrapper()).toThrowError(Error, "namespace is required");
@@ -39,14 +47,6 @@ describe("StorageWrapper", () => {
 
             expect(underTest.version).toBe(5);
         });
-    });
-
-    beforeEach(function () {
-        this.storage = {};
-        this.mockLocalStorage = {
-            setItem: (key, value) => this.storage[String(key)] = String(value),
-            getItem: (key) => this.storage[String(key)]
-        };
     });
 
     describe("saveString(key, value)", function() {
@@ -237,6 +237,11 @@ describe("StorageWrapper", () => {
             expect(() => underTest.loadArray("number")).toThrowError(TypeError, "value loaded was not an array");
             expect(() => underTest.loadArray("boolean")).toThrowError(TypeError, "value loaded was not an array");
             expect(() => underTest.loadArray("object")).toThrowError(TypeError, "value loaded was not an array");
+        });
+
+        it("should return undefined if key doesn't exist", function() {
+            const underTest = new StorageWrapper("load-array-undefined").withStorage(this.mockLocalStorage);
+            expect(underTest.loadArray("undefined")).toBeUndefined();
         });
 
         it("should load arrays", function() {
