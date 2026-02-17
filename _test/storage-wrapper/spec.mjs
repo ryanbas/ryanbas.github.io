@@ -1,14 +1,6 @@
 import StorageWrapper from "/js/module/storage-wrapper.mjs";
 
 describe("StorageWrapper", () => {
-    beforeEach(function () {
-        this.storage = {};
-        this.mockLocalStorage = {
-            setItem: (key, value) => this.storage[String(key)] = String(value),
-            getItem: (key) => this.storage[String(key)]
-        };
-    });
-
     describe("construction", function() {
         it("should require a namespace", () => {
             expect(() => new StorageWrapper()).toThrowError(Error, "namespace is required");
@@ -116,7 +108,6 @@ describe("StorageWrapper", () => {
 
         it("should require that version is set", () => {
             const underTest = new StorageWrapper("use-migration-path-requires-version");
-            
             expect(() => underTest.migrateToCurrentVersion([1])).toThrowError(Error, "version must be set to use a migration path");
         });
 

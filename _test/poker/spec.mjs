@@ -2,15 +2,6 @@ import PokerApp from "/poker/js/poker.mjs";
 import StorageWrapper from "/js/module/storage-wrapper.mjs";
 
 describe("PokerApp", () => {
-    beforeEach(function () {
-        this.storage = {};
-        this.mockLocalStorage = {
-            setItem: (key, value) => this.storage[String(key)] = String(value),
-            getItem: (key) => this.storage[String(key)],
-            removeItem: (key) => this.storage[String(key)] = undefined,
-        };
-    });
-
     describe("migrateStorage", function() {
         it("should migrate from v0 to v1 by copying playerNames and then deleting them", function() {
             const storageWrapper = new StorageWrapper("migrate-test", 1).withStorage(this.mockLocalStorage);
